@@ -1,3 +1,7 @@
-gcc -o server server.c jogador.h jogador.c
+mkdir -p bin
 
-gcc -o client client.c jogador.h jogador.c
+cd src
+
+gcc -o ../bin/server server.c headers/jogador.h headers/jogador.c
+
+gcc -o ../bin/client client.c headers/jogador.h headers/jogador.c
