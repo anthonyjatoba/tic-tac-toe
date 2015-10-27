@@ -8,31 +8,19 @@
 #include <sys/wait.h>
 #include <arpa/inet.h>
 
-#include "headers/tabuleiro.h"
-
 #define PORTA   12345
 #define BACKLOG 10
+#define MAXDATASIZE 100
 
 void main(){
   int socket_local, socket_remoto;
-  //sockaddr_in referente ao servidor
-  struct sockaddr_in endereco_local;
-  //sockaddr_in referente ao cliente
-  //TODO: acho que vou precisar de dois desses
-  struct sockaddr_in endereco_remoto;
+  //Struct contendo informações de endereço do servidor e cliente
+  struct sockaddr_in endereco_local, endereco_remoto;
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
 
-char tabuleiro[3][3];
-  int i, j;
-
-  iniciar_tabuleiro(tabuleiro);
-
-  salvar_tabuleiro(tabuleiro);
-
-  recuperar_tabuleiro(tabuleiro);
-
-  imprimir_tabuleiro(tabuleiro);
+  char buf[MAXDATASIZE];
+  int num_bytes;
 
   /* Inicio o socket*/
   socket_local = socket(AF_INET, SOCK_STREAM, 0);
@@ -64,9 +52,22 @@ char tabuleiro[3][3];
       continue;
     }
 
-    //para verificação
     printf("Conectado a %s\n", inet_ntoa(endereco_remoto.sin_addr));
 
-  }
+      if (!fork()) {
+        do{
+          if ((num_bytes = recv(socket_remoto, buf, MAXDATASIZE, 0)) == -1) {
+            perror("recv");
+            exit(1);
+          }
+          buf[num_bytes] = '\0';
+          printf("Recebido: %s\n", buf);
+        } while(strcmp(buf, "sair") != 0);
+
+        close(socket_remoto);
+      }
+
+    }
+
 
 }

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+gcc -o server server.c header/tabuleiro.h header/tabuleiro.c
+
+gcc -o client client.c header/tabuleiro.h header/tabuleiro.c
+
+

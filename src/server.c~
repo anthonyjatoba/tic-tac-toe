@@ -23,7 +23,7 @@ void main(){
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
 
-char tabuleiro[3][3];
+	char tabuleiro[3][3];
   int i, j;
 
   iniciar_tabuleiro(tabuleiro);
