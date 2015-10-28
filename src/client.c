@@ -10,13 +10,8 @@
 #define PORTA       12345
 #define MAXDATASIZE 100
 
-int get_num_jogadores(){
-  int num;
-  FILE *fp = fopen("num_jogadores", "r");
-  fscanf(fp, "%d", &num);
-  fclose(fp);
-  return num;
-}
+#include "headers/tabuleiro.h"
+#include "headers/jogador.h"
 
 void main(int argc, char *argv[]){
 
