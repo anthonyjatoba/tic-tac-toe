@@ -11,31 +11,55 @@
 #include "headers/tabuleiro.h"
 
 #define PORTA   12345
-#define BACKLOG 10
+#define BACKLOG 5
+#define MAXDATASIZE 100
+
+void iniciar_jogadores(){
+  FILE *fp = fopen("num_jogadores", "w");
+  fprintf(fp, "%d", 0);
+  fclose(fp);
+}
+
+void adicionar_jogadores(){
+  int num;
+  FILE *fp = fopen("num_jogadores", "r");
+  fscanf(fp, "%d", &num);
+  fp = fopen("num_jogadores", "w");
+  num++;
+  fprintf(fp, "%d", num);
+  fclose(fp);
+}
+
+int get_num_jogadores(){
+  int num;
+  FILE *fp = fopen("num_jogadores", "r");
+  fscanf(fp, "%d", &num);
+  fclose(fp);
+  return num;
+}
 
 void main(){
-  int socket_local, socket_remoto;
+
+  system("clear");
+
+  int socket_listener, socket_local;
   //sockaddr_in referente ao servidor
-  struct sockaddr_in endereco_local;
-  //sockaddr_in referente ao cliente
-  //TODO: acho que vou precisar de dois desses
-  struct sockaddr_in endereco_remoto;
+  struct sockaddr_in endereco_local, endereco_remoto;
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
+  int num_bytes;
 
-char tabuleiro[3][3];
   int i, j;
+  char tabuleiro[3][3];
 
+  iniciar_jogadores();
+
+  //Preenche e salva o tabuleiro
   iniciar_tabuleiro(tabuleiro);
-
   salvar_tabuleiro(tabuleiro);
 
-  recuperar_tabuleiro(tabuleiro);
-
-  imprimir_tabuleiro(tabuleiro);
-
   /* Inicio o socket*/
-  socket_local = socket(AF_INET, SOCK_STREAM, 0);
+  socket_listener = socket(AF_INET, SOCK_STREAM, 0);
 
   /* Configuro o endereco_local */
   endereco_local.sin_family = AF_INET;
@@ -44,13 +68,13 @@ char tabuleiro[3][3];
   bzero(&(endereco_local.sin_zero),8);
 
   /* bind */
-  if (bind(socket_local, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1){
+  if (bind(socket_listener, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1){
     perror("bind");
     exit(1);
   }
 
   /* listen */
-  if (listen(socket_local, BACKLOG) < 0){
+  if (listen(socket_listener, BACKLOG) < 0){
     perror("listen");
     exit(1);
   }
@@ -58,14 +82,27 @@ char tabuleiro[3][3];
   /* aqui acontece a mágica */
   while(1){
     /* accept */
-    if ((socket_remoto = accept(socket_local, (struct sockaddr *)&endereco_remoto, &tamanho)) < 0){
+    if ((socket_local = accept(socket_listener, (struct sockaddr *)&endereco_remoto, &tamanho)) < 0){
       perror("accept");
       //caso a conexão não seja aceita (dispara erro), o programa volta ao inicio da repetição
       continue;
     }
-
     //para verificação
     printf("Conectado a %s\n", inet_ntoa(endereco_remoto.sin_addr));
+
+    if (!fork()) {
+      char nome_jogador[20];
+      if ((num_bytes = recv(socket_local, nome_jogador, MAXDATASIZE, 0)) == -1) {
+        perror("recv");
+        exit(1);
+      }
+      nome_jogador[num_bytes] = '\0';
+      printf("Nome do jogador: %s\n", nome_jogador);
+
+      adicionar_jogadores();
+      
+      close(socket_local);
+    }
 
   }
 

@@ -10,7 +10,18 @@
 #define PORTA       12345
 #define MAXDATASIZE 100
 
+int get_num_jogadores(){
+  int num;
+  FILE *fp = fopen("num_jogadores", "r");
+  fscanf(fp, "%d", &num);
+  fclose(fp);
+  return num;
+}
+
 void main(int argc, char *argv[]){
+
+    system("clear");
+
     int socket_local;
     int num_bytes;
 
@@ -40,9 +51,35 @@ void main(int argc, char *argv[]){
     endereco_remoto.sin_addr = *((struct in_addr *)he->h_addr);
     bzero(&(endereco_remoto.sin_zero), 8);
 
-    if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1){
-      perror("conect");
-      exit(1);
+    if (get_num_jogadores() != 2){
+
+          if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1){
+            perror("conect");
+            exit(1);
+          }
+
+          char nome[20];
+          scanf(" %[^\n]", nome);
+
+          //envia o nome
+          if (send(socket_local, nome, MAXDATASIZE, 0) == -1) {
+            perror("send");
+            close(socket_local);
+            exit(0);
+          }
+
+          sleep(1);
+          if (get_num_jogadores() == 1){
+            printf("Aguarde outro jogador se conectar!\n");
+            while (get_num_jogadores() == 1) {
+              sleep(1);
+            }
+          }
+
+          while(1)
+            sleep(1);
+    } else {
+      printf("Ih rpz. Tá cheio\n");
     }
 
 }
