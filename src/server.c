@@ -8,16 +8,16 @@
 #include <sys/wait.h>
 #include <arpa/inet.h>
 
-#include "headers/tabuleiro.h"
-#include "headers/jogador.h"
+#include "headers/error.h"
 
 #define PORTA   12345
 #define BACKLOG 5
 #define MAXDATASIZE 100
 
 void main(){
-
+	
   system("clear");
+  printf("Servidor iniciado\n");
 
   int socket_listener, socket_local;
   //sockaddr_in referente ao servidor
@@ -25,15 +25,6 @@ void main(){
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
   int num_bytes;
-
-  int i, j;
-  char tabuleiro[3][3];
-
-  iniciar_jogadores();
-
-  //Preenche e salva o tabuleiro
-  iniciar_tabuleiro(tabuleiro);
-  salvar_tabuleiro(tabuleiro);
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
@@ -45,16 +36,12 @@ void main(){
   bzero(&(endereco_local.sin_zero),8);
 
   /* bind */
-  if (bind(socket_listener, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1){
-    perror("bind");
-    exit(1);
-  }
+  if (bind(socket_listener, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1)
+	bind_error();
 
   /* listen */
-  if (listen(socket_listener, BACKLOG) < 0){
-    perror("listen");
-    exit(1);
-  }
+  if (listen(socket_listener, BACKLOG) < 0)
+	listen_error();
 
   /* aqui acontece a mágica */
   while(1){
@@ -66,20 +53,6 @@ void main(){
     }
     //para verificação
     printf("Conectado a %s\n", inet_ntoa(endereco_remoto.sin_addr));
-
-    if (!fork()) {
-      char nome_jogador[20];
-      if ((num_bytes = recv(socket_local, nome_jogador, MAXDATASIZE, 0)) == -1) {
-        perror("recv");
-        exit(1);
-      }
-      nome_jogador[num_bytes] = '\0';
-      printf("Nome do jogador: %s\n", nome_jogador);
-
-      adicionar_jogadores();
-
-      close(socket_local);
-    }
 
   }
 
