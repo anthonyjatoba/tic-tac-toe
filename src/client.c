@@ -13,24 +13,31 @@
 #define MAXDATASIZE 100
 
 void main(int argc, char *argv[]){
+    int socket_local;
+    int num_bytes;
+    char buf[MAXDATASIZE];
+    struct hostent *he;
+    struct sockaddr_in endereco_remoto;
+    int log_h = 0; //Mensagem passada por parâmetro que habilita a impressão de mensagens
 
     system("clear");
 
-    int socket_local;
-    int num_bytes;
+    he = gethostbyname("localhost");
 
-    char buf[MAXDATASIZE];
-
-    struct hostent *he;
-
-    struct sockaddr_in endereco_remoto;
-
-    if (argc != 2){
-      he = gethostbyname("localhost");
-    } else {
+    if (argc == 2){
+      if (!strcmp(argv[1], "log"))
+        log_h = 1;
+      else
+        if ((he=gethostbyname(argv[1])) == NULL)
+          gethostbyname_error();
+    } else if (argc == 3){
       if ((he=gethostbyname(argv[1])) == NULL)
-		gethostbyname_error();
+        gethostbyname_error();
+      if (!strcmp(argv[2], "log"))
+        log_h = 1;
     }
+
+    printf("%s\t%d\n", he->h_name, log_h);
 
     if ((socket_local = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		socket_error();

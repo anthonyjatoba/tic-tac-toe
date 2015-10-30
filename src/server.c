@@ -14,17 +14,24 @@
 #define BACKLOG 5
 #define MAXDATASIZE 100
 
-void main(){
-	
-  system("clear");
-  printf("Servidor iniciado\n");
-
-  int socket_listener, socket_local;
+void main(int argc, char *argv[]){
+	int socket_listener, socket_local;
   //sockaddr_in referente ao servidor
   struct sockaddr_in endereco_local, endereco_remoto;
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
   int num_bytes;
+
+	//Se o log é habilitado (não por padrão)
+	int log_h = 0;
+
+	if (argc == 2 && strcmp(argv[1], "log") == 0)
+		log_h = 1;
+
+	printf("Servidor iniciado ");
+	if (log_h)
+		printf(" com log habilitado");
+	printf("\n");
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
