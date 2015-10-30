@@ -11,6 +11,6 @@
 
   int get_message_type(char *value, int log_h);
 
-  char* get_value(char* message);
+  char* get_value(char* message, int log_h);
 
 #endif
