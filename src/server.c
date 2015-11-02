@@ -26,12 +26,18 @@ void main(int argc, char *argv[]){
   int num_bytes;
 	char buf[MAXDATASIZE], _buf[MAXDATASIZE], mensagem[MAXDATASIZE];
 
+	char tabuleiro[] = "#########";
+	char peca = ' ';
+	char peca_oponente = ' ';
+	int my_turn = 0;
+	int end = 0;
+	char nome_jogador[20];
+
 	system("clear");
 	printf("Servidor iniciado\n");
 
 	iniciar_jogadores();
 	iniciar_tabuleiro();
-	jogada(2);
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
@@ -73,11 +79,16 @@ void main(int argc, char *argv[]){
 			//Responde à mensagem de START
 			if(get_message_type(_buf) == START){
 				strcpy(_buf, buf);
-
-				if (inserir_jogador(get_value(_buf)) == 0){
+				strcpy(nome_jogador, get_value(_buf));
+				if (inserir_jogador(nome_jogador) == 0){
 					if (get_num_jogadores() == 1){
+						peca = 'x';
+						peca_oponente = 'o';
+						my_turn = 1;
 						strcpy(mensagem, generate_message(WELCOME, "x"));
 					} else if (get_num_jogadores() == 2){
+						peca = 'o';
+						peca_oponente = 'x';
 						strcpy(mensagem, generate_message(WELCOME, "o"));
 					}
 				} else {
@@ -98,6 +109,44 @@ void main(int argc, char *argv[]){
 				send_error();
 
 			//Aqui começa a lógica do jogo...
+			do{
+				if (my_turn){
+					//Recupero a posição
+					if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+						recv_error();
+					buf[num_bytes] = '\0';
+					//Tenho que fazer isso para os métodos não modificarem o buf
+					strcpy(_buf, buf);
+					printf("%s jogou %c\n", nome_jogador, get_value(_buf)[0]);
+					strcpy(_buf, buf);
+					jogada(atoi(get_value(_buf)));
+
+					if(send(socket_local, "VALID_MOVE", MAXDATASIZE, 0) == -1)
+						send_error();
+					tabuleiro[atoi(get_value(_buf))] = peca;
+
+					my_turn = 0;
+				} else {
+					int posicao_anterior = get_posicao();
+					int posicao_atual = posicao_anterior;
+
+					//Verifica se a posição mudou
+					do{
+						posicao_atual = get_posicao();
+						printf("Posição atual: %d\n", get_posicao());
+						printf("Anterior: %d\tatual: %d\n", posicao_anterior, posicao_atual);
+						sleep(1);
+					}while (posicao_anterior == posicao_atual);
+					sprintf(mensagem, "OPPONENT_MOVED %d", posicao_atual);
+
+					tabuleiro[posicao_atual] = peca_oponente;
+
+					if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
+						send_error();
+
+					my_turn = 1;
+				}
+			}while(!end);
 
 		}
 

@@ -6,4 +6,8 @@
   //Salva a última jogada no arquivo
   void jogada(int posicao);
 
+  int get_posicao();
+
+  void imprime(char tabuleiro[10]);
+
 #endif

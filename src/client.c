@@ -25,7 +25,7 @@ void main(int argc, char *argv[]){
 
   //Variáveis do jogo
   char nome_jogador[20];
-  char peca;
+  char peca, peca_oponente;
   int coordenada;
   int my_turn = 0;
   int end;
@@ -71,6 +71,10 @@ void main(int argc, char *argv[]){
     strcpy(_buf, buf);
     peca = get_value(_buf)[0];
     printf("Você vai jogar com a peça %c\n", peca);
+    if (peca == 'x')
+      peca_oponente = 'o';
+    else
+      peca_oponente = 'x';
   }
 
   if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
@@ -83,13 +87,15 @@ void main(int argc, char *argv[]){
       recv_error();
     buf[num_bytes] = '\0';
   }
-  printf("Recebi um READY :]");
+  printf("Recebi um READY :]\n");
 
   //X começa
   if (peca == 'x')
     my_turn = 1;
 
   do{
+    system("clear");
+    imprime(tabuleiro);
     if (my_turn){
       printf("Digite a coordenada da sua jogada: \n");
       scanf("%d", &coordenada);
@@ -97,8 +103,38 @@ void main(int argc, char *argv[]){
       sprintf(message, "MOVE %d", coordenada);
       if(send(socket_local, message, MAXDATASIZE, 0) == -1)
         send_error();
+      //Recebe o VALID_MOVE, inverte o my_turn
+      if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+        recv_error();
+      buf[num_bytes] = '\0';
+
+      strcpy(_buf, buf);
+
+      if (get_message_type(buf) == VALID_MOVE){
+        printf("Teste\n");
+        tabuleiro[coordenada] = peca;
+      }
+      my_turn = 0;
+    } else {
+      printf("Espere o outro jogador\n");
+
+      if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+        recv_error();
+      buf[num_bytes] = '\0';
+
+      strcpy(_buf, buf);
+      printf("Mensagem: %s\n", _buf);
+      if (get_message_type(_buf) == OPPONENT_MOVED){
+        printf("O oponente fez um movimento :D\n");
+      }
+      strcpy(_buf, buf);
+
+      coordenada = atoi(get_value(_buf));
+
+      tabuleiro[coordenada] = peca_oponente;
+      my_turn = 1;
+
     }
-    sleep(0.1);
   }while(end != 1);
 
 }

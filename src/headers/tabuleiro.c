@@ -19,9 +19,21 @@ void jogada(int posicao){
 }
 
 int get_posicao(){
-  int posic;
+  int posic = -1;
   FILE *fp = fopen(PATH, "r");
   fscanf(fp, "%d", &posic);
   fclose(fp);
   return posic;
+}
+
+void imprime(char tabuleiro[10]){
+  printf("   |    |   \n");
+  printf(" %c | %c  | %c\n", tabuleiro[0], tabuleiro[1], tabuleiro[2]);
+  printf("___|____|____\n");
+  printf("   |    |   \n");
+  printf(" %c | %c  | %c\n", tabuleiro[3], tabuleiro[4], tabuleiro[5]);
+  printf("___|____|____\n");
+  printf("   |    |   \n");
+  printf(" %c | %c  | %c\n", tabuleiro[6], tabuleiro[7], tabuleiro[8]);
+  printf("   |    |   \n");
 }
