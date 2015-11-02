@@ -123,12 +123,13 @@ void main(int argc, char *argv[]){
 
 					if(send(socket_local, "VALID_MOVE", MAXDATASIZE, 0) == -1)
 						send_error();
-					tabuleiro[atoi(get_value(_buf))] = peca;
 
+					printf("Mandei o VALID_MOVE\n");
 					my_turn = 0;
+
 				} else {
 					int posicao_anterior = get_posicao();
-					int posicao_atual = posicao_anterior;
+					int posicao_atual = get_posicao();
 
 					//Verifica se a posição mudou
 					do{
@@ -136,17 +137,17 @@ void main(int argc, char *argv[]){
 						printf("Posição atual: %d\n", get_posicao());
 						printf("Anterior: %d\tatual: %d\n", posicao_anterior, posicao_atual);
 						sleep(1);
-					}while (posicao_anterior == posicao_atual);
-					sprintf(mensagem, "OPPONENT_MOVED %d", posicao_atual);
+					} while (posicao_anterior == posicao_atual);
 
-					tabuleiro[posicao_atual] = peca_oponente;
+					sprintf(mensagem, "OPPONENT_MOVED %d", posicao_atual);
+					printf("Mandei o OPPONENT_MOVED\n");
 
 					if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 						send_error();
 
 					my_turn = 1;
 				}
-			}while(!end);
+			}while(1);
 
 		}
 

@@ -123,7 +123,7 @@ void main(int argc, char *argv[]){
       buf[num_bytes] = '\0';
 
       strcpy(_buf, buf);
-      printf("Mensagem: %s\n", _buf);
+      
       if (get_message_type(_buf) == OPPONENT_MOVED){
         printf("O oponente fez um movimento :D\n");
       }
