@@ -23,14 +23,12 @@ void main(int argc, char *argv[]){
   //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
   int num_bytes;
-	char buf[MAXDATASIZE];
-	char _buf[MAXDATASIZE];
+	char buf[MAXDATASIZE], _buf[MAXDATASIZE], mensagem[MAXDATASIZE];
 
 	system("clear");
+	printf("Servidor iniciado\n");
 
 	iniciar_jogadores();
-
-	printf("Servidor iniciado\n");
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
@@ -69,22 +67,22 @@ void main(int argc, char *argv[]){
 
 			strcpy(_buf, buf);
 
+			//Responde à mensagem de START
 			if(get_message_type(_buf) == START){
 				strcpy(_buf, buf);
+
 				if (inserir_jogador(get_value(_buf)) == 0){
 					if (get_num_jogadores() == 1){
-						if(send(socket_local, generate_message(WELCOME, "x"), MAXDATASIZE, 0) == -1)
-							send_error();
-					} else{
-						if(send(socket_local, generate_message(WELCOME, "o"), MAXDATASIZE, 0) == -1)
-							send_error();
+						strcpy(mensagem, generate_message(WELCOME, "x"));
+					} else {
+						strcpy(mensagem, generate_message(WELCOME, "o"));
 					}
 				} else {
-					if(send(socket_local, generate_message(FULL_ROOM, ""), MAXDATASIZE, 0) == -1)
-						send_error();
+					strcpy(mensagem, generate_message(FULL_ROOM, ""));
 				}
+				if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
+					send_error();
 			}
-
 
 		}
 

@@ -16,31 +16,23 @@
 
 void main(int argc, char *argv[]){
     int socket_local;
+    char buf[MAXDATASIZE], _buf[MAXDATASIZE];
     int num_bytes;
-    char buf[MAXDATASIZE];
-    char _buf[MAXDATASIZE];
-    struct hostent *he;
+
+    struct hostent * he = gethostbyname("localhost");
     struct sockaddr_in endereco_remoto;
-    int log_h = 0; //_buf passada por parâmetro que habilita a impressão de mensagens
+
+    char nome_jogador[20];
 
     system("clear");
 
-    he = gethostbyname("localhost");
-
+    //tá feio isso aqui
     if (argc == 2){
-      if (!strcmp(argv[1], "log"))
-        log_h = 1;
-      else
-        if ((he=gethostbyname(argv[1])) == NULL)
-          gethostbyname_error();
-    } else if (argc == 3){
-      if ((he=gethostbyname(argv[1])) == NULL)
-        gethostbyname_error();
-      if (!strcmp(argv[2], "log"))
-        log_h = 1;
+      if ((he=gethostbyname(argv[1])) == NULL) {
+        herror("gethostbyname");
+        exit(1);
+      }
     }
-
-    //printf("%s\t%d\n", he->h_name, log_h);
 
     if ((socket_local = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 		  socket_error();
@@ -53,10 +45,12 @@ void main(int argc, char *argv[]){
     if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
 		  connect_error();
 
-    char nome[20] = "anthony";
+    printf("Digite seu nome: ");
+    scanf(" %[^\n]", nome_jogador);
+    fflush(stdin);
 
     //START
-    if(send(socket_local, generate_message(START, nome), MAXDATASIZE, 0) == -1)
+    if(send(socket_local, generate_message(START, nome_jogador), MAXDATASIZE, 0) == -1)
       send_error();
 
     //Recebe o WELCOME
@@ -72,9 +66,10 @@ void main(int argc, char *argv[]){
       exit(0);
     } else {
       strcpy(_buf, buf);
-      printf("Você vai jogar com a peça %s\n", get_value(_buf));
+      char peca = get_value(_buf)[0];
+      printf("Você vai jogar com a peça %c\n", peca);
     }
-
+    
     while(1){
       sleep(1);
     }
