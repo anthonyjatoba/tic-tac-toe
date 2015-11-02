@@ -21,6 +21,7 @@ void main(int argc, char *argv[]){
   int num_bytes;
   struct hostent * he = gethostbyname("localhost");
   struct sockaddr_in endereco_remoto;
+  char tabuleiro[] = "#########";
 
   //Variáveis do jogo
   char nome_jogador[20];

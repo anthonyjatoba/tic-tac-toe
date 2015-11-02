@@ -11,6 +11,7 @@
 #include "headers/error.h"
 #include "headers/jogador.h"
 #include "headers/message.h"
+#include "headers/tabuleiro.h"
 
 #define PORTA   12345
 #define BACKLOG 5
@@ -29,6 +30,8 @@ void main(int argc, char *argv[]){
 	printf("Servidor iniciado\n");
 
 	iniciar_jogadores();
+	iniciar_tabuleiro();
+	jogada(2);
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
