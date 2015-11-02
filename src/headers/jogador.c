@@ -11,7 +11,7 @@ void iniciar_jogadores(){
   fclose(fp);
 }
 
-int get_num_jogadores(int log_h){
+int get_num_jogadores(){
   int num;
   char ch;
 
@@ -25,15 +25,12 @@ int get_num_jogadores(int log_h){
 
   fclose(fp);
 
-  if(log_h)
-    printf("Número de jogadores: %d\n", num);
-
   return num;
 }
 
 //Salva um jogador no arquivo
-int inserir_jogador(char* nome, int log_h){
-  if (get_num_jogadores(log_h) < 2){
+int inserir_jogador(char* nome){
+  if (get_num_jogadores() < 2){
     FILE *fp = fopen(path, "a");
     fprintf(fp, "%s\n", nome);
     fclose(fp);

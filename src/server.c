@@ -9,8 +9,8 @@
 #include <arpa/inet.h>
 
 #include "headers/error.h"
-#include "headers/message.h"
 #include "headers/jogador.h"
+#include "headers/message.h"
 
 #define PORTA   12345
 #define BACKLOG 5
@@ -24,18 +24,13 @@ void main(int argc, char *argv[]){
   int tamanho = sizeof(struct sockaddr_in);
   int num_bytes;
 	char buf[MAXDATASIZE];
-	char mensagem[MAXDATASIZE];
-	int log_h = 0;
+	char _buf[MAXDATASIZE];
+
+	system("clear");
 
 	iniciar_jogadores();
 
-	if (argc == 2 && strcmp(argv[1], "log") == 0)
-		log_h = 1;
-
-	printf("Servidor iniciado");
-	if (log_h)
-		printf(" com log habilitado");
-	printf("\n");
+	printf("Servidor iniciado\n");
 
   /* Inicio o socket*/
   socket_listener = socket(AF_INET, SOCK_STREAM, 0);
@@ -48,11 +43,11 @@ void main(int argc, char *argv[]){
 
   /* bind */
   if (bind(socket_listener, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1)
-	bind_error();
+		bind_error();
 
   /* listen */
   if (listen(socket_listener, BACKLOG) < 0)
-	listen_error();
+		listen_error();
 
   /* aqui acontece a mágica */
   while(1){
@@ -70,24 +65,29 @@ void main(int argc, char *argv[]){
 
 			if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
 			  recv_error();
-
 			buf[num_bytes] = '\0';
 
-			strcpy(mensagem, buf);
+			strcpy(_buf, buf);
 
-			printf("%s\n", mensagem);
-			get_message_type(mensagem, log_h);
-
-			strcpy(mensagem, buf);
-			if (inserir_jogador(get_value(mensagem, log_h), log_h) == 0){
-				if(send(socket_local, generate_message(LOGIN_ACCEPTED, "", log_h), MAXDATASIZE, 0) == -1)
-					send_error();
-			} else {
-				if(send(socket_local, generate_message(LOGIN_DENYED, "", log_h), MAXDATASIZE, 0) == -1)
-					send_error();
+			if(get_message_type(_buf) == START){
+				strcpy(_buf, buf);
+				if (inserir_jogador(get_value(_buf)) == 0){
+					if (get_num_jogadores() == 1){
+						if(send(socket_local, generate_message(WELCOME, "x"), MAXDATASIZE, 0) == -1)
+							send_error();
+					} else{
+						if(send(socket_local, generate_message(WELCOME, "o"), MAXDATASIZE, 0) == -1)
+							send_error();
+					}
+				} else {
+					if(send(socket_local, generate_message(FULL_ROOM, ""), MAXDATASIZE, 0) == -1)
+						send_error();
+				}
 			}
+
 
 		}
 
 	}
+
 }

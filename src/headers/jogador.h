@@ -8,7 +8,7 @@
   void iniciar_jogadores();
 
   //Retorna o número de jogadores da sessão
-  int get_num_jogadores(int log_h);
+  int get_num_jogadores();
 
   //Salva um ogador no arquivo
   void inserir_jogador(char nome);

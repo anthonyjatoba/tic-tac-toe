@@ -4,61 +4,101 @@
 
 #include "message.h"
 
-char* generate_message(int message_type, char *value, int log_h){
+char* generate_message(int message_type, char *value){
   char *return_message;
 
 	return_message = (char *) calloc ((strlen(value)+20),sizeof(char));
 
 	switch(message_type){
-		case LOGIN:{
-      sprintf(return_message, "LOGIN %s", value);
+    //START <username>
+		case START:{
+      sprintf(return_message, "START %s", value);
 			break;
 		}
-    case LOGIN_ACCEPTED:{
-      sprintf(return_message, "LOGIN_ACCEPTED");
+    //WELCOME <char>  char = 'x' ou 'o'
+    case WELCOME:{
+      sprintf(return_message, "WELCOME %s", value);
       break;
     }
-    case LOGIN_DENYED:{
-      sprintf(return_message, "LOGIN_DENYED");
+    case FULL_ROOM:{
+      sprintf(return_message, "FULL_ROOM");
+      break;
+    }
+    //MOVE <coordenada>
+    case MOVE:{
+      sprintf(return_message, "MOVE %s", value);
+      break;
+    }
+    case VALID_MOVE:{
+      sprintf(return_message, "VALID_MOVE");
+      break;
+    }
+    //OPPONENT_MOVED <coordenada>
+    case OPPONENT_MOVED:{
+      sprintf(return_message, "OPPONENT_MOVED %s", value);
+      break;
+    }
+    case WIN:{
+      sprintf(return_message, "WIN");
+      break;
+    }
+    case LOSE:{
+      sprintf(return_message, "LOSE");
+      break;
+    }
+    case TIE:{
+      sprintf(return_message, "TIE");
       break;
     }
 	}
 
-	if(log_h){
-		printf("Mensagem gerada: %s\n", return_message);
-		fflush(stdout);
-	}
+  printf("Mensagem gerada: %s\n", return_message);
 
 	return return_message;
 }
 
-int get_message_type(char *message, int log_h){
-
+enum type get_message_type(char *message){
 	char *tag;
 	tag = strtok(message, " ");
 
-  if(log_h)
-    printf("Tipo da mensagem: %s\n", tag);
+  printf("TAG: %s\n", tag);
 
-	if(strcmp(tag, "LOGIN") == 0)
-		return LOGIN;
-  if(strcmp(tag, "LOGIN_ACCEPTED") == 0)
-  		return LOGIN_ACCEPTED;
-  if(strcmp(tag, "LOGIN_DENYED") == 0)
-  		return LOGIN_DENYED;
-
+	if(strcmp(tag, "START") == 0)
+    return START;
+  if(strcmp(tag, "WELCOME") == 0)
+  		return WELCOME;
+  if(strcmp(tag, "MOVE") == 0)
+  		return MOVE;
+  if(strcmp(tag, "VALID_MOVE") == 0)
+  		return VALID_MOVE;
+  if(strcmp(tag, "OPPONENT_MOVED") == 0)
+  		return OPPONENT_MOVED;
+  if(strcmp(tag, "WIN") == 0)
+  		return WIN;
+  if(strcmp(tag, "LOSE") == 0)
+      return LOSE;
+  if(strcmp(tag, "TIE") == 0)
+      return TIE;
 	return -1;
 }
 
-char* get_value(char *message, int log_h) {
+char* get_value(char *message) {
    const char s[2] = " ";
    char *token;
 
    token = strtok(message, s);
    token = strtok(NULL, s);
 
-   if (log_h)
-    printf("Valor da mensagem: %s\n", token);
-
    return token;
+}
+
+void log_message(char *message){
+  const char s[2] = " ";
+  char *token;
+
+  token = strtok(message, s);
+  printf("TAG: %s\t", token);
+  token = strtok(NULL, s);
+  printf("Valor: %s\n", token);
+
 }

@@ -8,8 +8,8 @@
 #include <sys/socket.h>
 
 #include "headers/error.h"
-#include "headers/message.h"
 #include "headers/jogador.h"
+#include "headers/message.h"
 
 #define PORTA       12345
 #define MAXDATASIZE 100
@@ -18,9 +18,10 @@ void main(int argc, char *argv[]){
     int socket_local;
     int num_bytes;
     char buf[MAXDATASIZE];
+    char _buf[MAXDATASIZE];
     struct hostent *he;
     struct sockaddr_in endereco_remoto;
-    int log_h = 0; //Mensagem passada por parâmetro que habilita a impressão de mensagens
+    int log_h = 0; //_buf passada por parâmetro que habilita a impressão de mensagens
 
     system("clear");
 
@@ -52,27 +53,30 @@ void main(int argc, char *argv[]){
     if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
 		  connect_error();
 
-    char nome[20];
-    printf("Digite seu nome: ");
-    scanf(" %[^\n]", nome);
+    char nome[20] = "anthony";
 
-    if(send(socket_local, generate_message(LOGIN, nome, log_h), MAXDATASIZE, 0) == -1)
+    //START
+    if(send(socket_local, generate_message(START, nome), MAXDATASIZE, 0) == -1)
       send_error();
 
+    //Recebe o WELCOME
     if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
       recv_error();
     buf[num_bytes] = '\0';
+    fflush(stdin);
 
-    if (strcmp(buf, "LOGIN_ACCEPTED") == 0){
-      printf("Login aceito\n");
-      while (1){
-        sleep(1);
-      }
-    } else {
-      printf("Login NEGADO\n");
+    strcpy(_buf, buf);
+
+    if (get_message_type(_buf) != WELCOME){
+      printf("A sala está cheia, tente novamente mais tarde\n");
       exit(0);
+    } else {
+      strcpy(_buf, buf);
+      printf("Você vai jogar com a peça %s\n", get_value(_buf));
     }
 
-
+    while(1){
+      sleep(1);
+    }
 
 }
