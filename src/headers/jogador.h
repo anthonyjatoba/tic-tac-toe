@@ -5,12 +5,13 @@
     char nome[20];
   };
 
+  //Reseta o arquivo de jogadores
   void iniciar_jogadores();
 
   //Retorna o número de jogadores da sessão
   int get_num_jogadores();
 
-  //Salva um ogador no arquivo
+  //Salva um jogador no arquivo
   void inserir_jogador(char nome);
 
 #endif

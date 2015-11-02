@@ -5,51 +5,37 @@
 #include "message.h"
 
 char* generate_message(int message_type, char *value){
-  char *return_message;
-
-	return_message = (char *) calloc ((strlen(value)+20),sizeof(char));
+  char *return_message = (char *) calloc ((strlen(value)+20), sizeof(char));
 
 	switch(message_type){
     //START <username>
-		case START:{
+		case START:
       sprintf(return_message, "START %s", value);
 			break;
-		}
-    //WELCOME <char>  char = 'x' ou 'o'
-    case WELCOME:{
+    case WELCOME:
       sprintf(return_message, "WELCOME %s", value);
       break;
-    }
-    case FULL_ROOM:{
+    case FULL_ROOM:
       sprintf(return_message, "FULL_ROOM");
       break;
-    }
-    //MOVE <coordenada>
-    case MOVE:{
+    case MOVE:
       sprintf(return_message, "MOVE %s", value);
       break;
-    }
-    case VALID_MOVE:{
+    case VALID_MOVE:
       sprintf(return_message, "VALID_MOVE");
       break;
-    }
-    //OPPONENT_MOVED <coordenada>
-    case OPPONENT_MOVED:{
+    case OPPONENT_MOVED:
       sprintf(return_message, "OPPONENT_MOVED %s", value);
       break;
-    }
-    case WIN:{
+    case WIN:
       sprintf(return_message, "WIN");
       break;
-    }
-    case LOSE:{
+    case LOSE:
       sprintf(return_message, "LOSE");
       break;
-    }
-    case TIE:{
+    case TIE:
       sprintf(return_message, "TIE");
       break;
-    }
 	}
 
   printf("Mensagem gerada: %s\n", return_message);
@@ -60,8 +46,6 @@ char* generate_message(int message_type, char *value){
 enum type get_message_type(char *message){
 	char *tag;
 	tag = strtok(message, " ");
-
-  printf("TAG: %s\n", tag);
 
 	if(strcmp(tag, "START") == 0)
     return START;

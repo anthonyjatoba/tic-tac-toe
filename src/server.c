@@ -94,6 +94,8 @@ void main(int argc, char *argv[]){
 			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
 				send_error();
 
+			//Aqui começa a lógica do jogo...
+
 		}
 
 	}

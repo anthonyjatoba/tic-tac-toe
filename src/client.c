@@ -15,70 +15,89 @@
 #define MAXDATASIZE 100
 
 void main(int argc, char *argv[]){
-    int socket_local;
-    char buf[MAXDATASIZE], _buf[MAXDATASIZE];
-    int num_bytes;
+  //Variáveis de rede
+  int socket_local;
+  char buf[MAXDATASIZE], _buf[MAXDATASIZE], message[MAXDATASIZE];
+  int num_bytes;
+  struct hostent * he = gethostbyname("localhost");
+  struct sockaddr_in endereco_remoto;
 
-    struct hostent * he = gethostbyname("localhost");
-    struct sockaddr_in endereco_remoto;
+  //Variáveis do jogo
+  char nome_jogador[20];
+  char peca;
+  int coordenada;
+  int my_turn = 0;
+  int end;
 
-    char nome_jogador[20];
+  system("clear");
 
-    system("clear");
-
-    //tá feio isso aqui
-    if (argc == 2){
-      if ((he=gethostbyname(argv[1])) == NULL) {
-        herror("gethostbyname");
-        exit(1);
-      }
+  if (argc == 2)
+    if ((he=gethostbyname(argv[1])) == NULL) {
+      herror("gethostbyname");
+      exit(1);
     }
 
-    if ((socket_local = socket(AF_INET, SOCK_STREAM, 0)) == -1)
-		  socket_error();
+  if ((socket_local = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+	  socket_error();
 
-    endereco_remoto.sin_family = AF_INET;
-    endereco_remoto.sin_port = htons(PORTA);
-    endereco_remoto.sin_addr = *((struct in_addr *)he->h_addr);
-    bzero(&(endereco_remoto.sin_zero), 8);
+  endereco_remoto.sin_family = AF_INET;
+  endereco_remoto.sin_port = htons(PORTA);
+  endereco_remoto.sin_addr = *((struct in_addr *)he->h_addr);
+  bzero(&(endereco_remoto.sin_zero), 8);
 
-    if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
-		  connect_error();
+  if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
+	  connect_error();
 
-    printf("Digite seu nome: ");
-    scanf(" %[^\n]", nome_jogador);
-    fflush(stdin);
+  printf("Digite seu nome: ");
+  scanf(" %[^\n]", nome_jogador);
+  fflush(stdin);
 
-    //START
-    if(send(socket_local, generate_message(START, nome_jogador), MAXDATASIZE, 0) == -1)
-      send_error();
+  //START
+  if(send(socket_local, generate_message(START, nome_jogador), MAXDATASIZE, 0) == -1)
+    send_error();
 
-    //Recebe o WELCOME
-    if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
-      recv_error();
-    buf[num_bytes] = '\0';
+  //Recebe o WELCOME
+  if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+    recv_error();
+  buf[num_bytes] = '\0';
 
+  strcpy(_buf, buf);
+
+  if (get_message_type(_buf) != WELCOME){
+    printf("A sala está cheia, tente novamente mais tarde\n");
+    exit(0);
+  } else {
     strcpy(_buf, buf);
+    peca = get_value(_buf)[0];
+    printf("Você vai jogar com a peça %c\n", peca);
+  }
 
-    if (get_message_type(_buf) != WELCOME){
-      printf("A sala está cheia, tente novamente mais tarde\n");
-      exit(0);
-    } else {
-      strcpy(_buf, buf);
-      char peca = get_value(_buf)[0];
-      printf("Você vai jogar com a peça %c\n", peca);
-    }
+  if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+    recv_error();
+  buf[num_bytes] = '\0';
 
+  //Aguarda o jogo estar pronto (2 jogadores)
+  while(strcmp(buf, "WAIT") == 0){
     if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
       recv_error();
     buf[num_bytes] = '\0';
+  }
+  printf("Recebi um READY :]");
 
-    //Aguarda o jogo estar pronto (2 jogadores)
-    while(strcmp(buf, "WAIT") == 0){
-      if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
-        recv_error();
-      buf[num_bytes] = '\0';
+  //X começa
+  if (peca == 'x')
+    my_turn = 1;
+
+  do{
+    if (my_turn){
+      printf("Digite a coordenada da sua jogada: \n");
+      scanf("%d", &coordenada);
+      //validar jogada
+      sprintf(message, "MOVE %d", coordenada);
+      if(send(socket_local, message, MAXDATASIZE, 0) == -1)
+        send_error();
     }
+    sleep(0.1);
+  }while(end != 1);
 
-    printf("Recebi um READY :]");
 }

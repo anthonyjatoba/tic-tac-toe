@@ -4,18 +4,18 @@
 
 #include "jogador.h"
 
-#define path "jogadores.record"
+//caminho no qual o arquivo será salvo
+#define PATH "jogadores.record"
 
-void iniciar_jogadores(){
-  FILE *fp = fopen(path, "w");
+void iniciar_jogadores() {
+  FILE *fp = fopen(PATH, "w");
   fclose(fp);
 }
 
-int get_num_jogadores(){
+int get_num_jogadores() {
   char ch;
   int num = 0;
-
-  FILE *fp = fopen(path, "r");
+  FILE *fp = fopen(PATH, "r");
 
   while(!feof(fp)) {
     ch = fgetc(fp);
@@ -24,18 +24,16 @@ int get_num_jogadores(){
   }
 
   fclose(fp);
-
   return num;
 }
 
-//Salva um jogador no arquivo
-int inserir_jogador(char* nome){
-  if (get_num_jogadores() < 2){
-    FILE *fp = fopen(path, "a");
+//Salva um jogador no arquivo. Retorna 1 caso não possa inserir
+int inserir_jogador(char* nome) {
+  if (get_num_jogadores() < 2) {
+    FILE *fp = fopen(PATH, "a");
     fprintf(fp, "%s\n", nome);
     fclose(fp);
     return 0;
-  } else {
-    return 1;
   }
+  return 1;
 }
