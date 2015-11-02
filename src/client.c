@@ -57,7 +57,6 @@ void main(int argc, char *argv[]){
     if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
       recv_error();
     buf[num_bytes] = '\0';
-    fflush(stdin);
 
     strcpy(_buf, buf);
 
@@ -69,9 +68,17 @@ void main(int argc, char *argv[]){
       char peca = get_value(_buf)[0];
       printf("Você vai jogar com a peça %c\n", peca);
     }
-    
-    while(1){
-      sleep(1);
+
+    if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+      recv_error();
+    buf[num_bytes] = '\0';
+
+    //Aguarda o jogo estar pronto (2 jogadores)
+    while(strcmp(buf, "WAIT") == 0){
+      if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+        recv_error();
+      buf[num_bytes] = '\0';
     }
 
+    printf("Recebi um READY :]");
 }

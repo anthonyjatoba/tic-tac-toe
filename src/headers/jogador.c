@@ -12,8 +12,8 @@ void iniciar_jogadores(){
 }
 
 int get_num_jogadores(){
-  int num;
   char ch;
+  int num = 0;
 
   FILE *fp = fopen(path, "r");
 

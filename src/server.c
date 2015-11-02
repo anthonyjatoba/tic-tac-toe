@@ -64,7 +64,7 @@ void main(int argc, char *argv[]){
 			if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
 			  recv_error();
 			buf[num_bytes] = '\0';
-
+			//Tenho que fazer isso para os métodos não modificarem o buf
 			strcpy(_buf, buf);
 
 			//Responde à mensagem de START
@@ -74,15 +74,25 @@ void main(int argc, char *argv[]){
 				if (inserir_jogador(get_value(_buf)) == 0){
 					if (get_num_jogadores() == 1){
 						strcpy(mensagem, generate_message(WELCOME, "x"));
-					} else {
+					} else if (get_num_jogadores() == 2){
 						strcpy(mensagem, generate_message(WELCOME, "o"));
 					}
 				} else {
-					strcpy(mensagem, generate_message(FULL_ROOM, ""));
+					strcpy(mensagem, "FULL_ROOM");
 				}
 				if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 					send_error();
 			}
+
+			//Aqui ele avisa aos clientes que está pronto para o jogo
+			//Tá consumindo bastante cpu...
+			do{
+				if(send(socket_local, "WAIT", MAXDATASIZE, 0) == -1)
+					send_error();
+			} while(get_num_jogadores() != 2);
+
+			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
+				send_error();
 
 		}
 
