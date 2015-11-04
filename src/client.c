@@ -21,7 +21,7 @@ void main(int argc, char *argv[]){
   int num_bytes;
   struct hostent * he = gethostbyname("localhost");
   struct sockaddr_in endereco_remoto;
-  char tabuleiro[] = "#########";
+  char tabuleiro[] = "         ";
 
   //Variáveis do jogo
   char nome_jogador[20];
@@ -96,10 +96,14 @@ void main(int argc, char *argv[]){
   do{
     system("clear");
     imprime(tabuleiro);
+    //Minha vez
     if (my_turn){
-      printf("Digite a coordenada da sua jogada: \n");
-      scanf("%d", &coordenada);
-      //validar jogada
+
+      do{
+        printf("Digite a coordenada da sua jogada: \n");
+        scanf("%d", &coordenada);
+      }while (!validar_jogada(tabuleiro, coordenada));
+
       sprintf(message, "MOVE %d", coordenada);
       if(send(socket_local, message, MAXDATASIZE, 0) == -1)
         send_error();
@@ -112,7 +116,7 @@ void main(int argc, char *argv[]){
 
       if (get_message_type(buf) == VALID_MOVE){
         printf("Teste\n");
-        tabuleiro[coordenada] = peca;
+        tabuleiro[coordenada-1] = peca;
       }
       my_turn = 0;
     } else {
@@ -122,19 +126,13 @@ void main(int argc, char *argv[]){
         recv_error();
       buf[num_bytes] = '\0';
 
-      strcpy(_buf, buf);
+      coordenada = atoi(get_value(buf));
 
-      if (get_message_type(_buf) == OPPONENT_MOVED){
-        printf("O oponente fez um movimento :D\n");
-      }
-      strcpy(_buf, buf);
+      tabuleiro[coordenada-1] = peca_oponente;
 
-      coordenada = atoi(get_value(_buf));
-
-      tabuleiro[coordenada] = peca_oponente;
       my_turn = 1;
 
     }
-  }while(end != 1);
+  } while(end != 1);
 
 }

@@ -10,4 +10,6 @@
 
   void imprime(char tabuleiro[10]);
 
+  int validar_jogada(char tabuleiro[10], int posicao);
+
 #endif
