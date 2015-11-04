@@ -82,7 +82,7 @@ void main(int argc, char *argv[]){
   buf[num_bytes] = '\0';
 
   //Aguarda o jogo estar pronto (2 jogadores)
-  while(strcmp(buf, "WAIT") == 0){
+  while(strcmp(buf, "READY") != 0){
     if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
       recv_error();
     buf[num_bytes] = '\0';
@@ -123,7 +123,7 @@ void main(int argc, char *argv[]){
       buf[num_bytes] = '\0';
 
       strcpy(_buf, buf);
-      
+
       if (get_message_type(_buf) == OPPONENT_MOVED){
         printf("O oponente fez um movimento :D\n");
       }

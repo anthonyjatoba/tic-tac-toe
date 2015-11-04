@@ -116,10 +116,7 @@ void main(int argc, char *argv[]){
 						recv_error();
 					buf[num_bytes] = '\0';
 					//Tenho que fazer isso para os métodos não modificarem o buf
-					strcpy(_buf, buf);
-					printf("%s jogou %c\n", nome_jogador, get_value(_buf)[0]);
-					strcpy(_buf, buf);
-					jogada(atoi(get_value(_buf)));
+					jogada(atoi(get_value(buf)));
 
 					if(send(socket_local, "VALID_MOVE", MAXDATASIZE, 0) == -1)
 						send_error();
