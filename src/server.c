@@ -71,7 +71,9 @@ void main(int argc, char *argv[]){
 			if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
 			  recv_error();
 			buf[num_bytes] = '\0';
-			//Tenho que fazer isso para os métodos não modificarem o buf
+
+			printf("Mensagem recebida: %s\n", buf);
+
 			strcpy(_buf, buf);
 
 			strcpy(nome_jogador, get_value(_buf));
@@ -93,6 +95,7 @@ void main(int argc, char *argv[]){
 
 			if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 				send_error();
+			printf("Mensagem enviada: %s\n", mensagem);
 
 			//Aqui ele avisa aos clientes que está pronto para o jogo
 			//Tá consumindo bastante cpu...
@@ -102,46 +105,48 @@ void main(int argc, char *argv[]){
 			} while(get_num_jogadores() != 2);
 
 			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
-				send_error();
+					send_error();
+			printf("Mandei a mensagem de READY para %s\n", nome_jogador);
 
 			//Aqui começa a lógica do jogo...
 			do{
-
 				//Após cada movimento, checar o status
 				if (verificar_fim(tabuleiro, peca, peca_oponente) == 0){
-					printf("CONTINUE\n");
 					if(send(socket_local, "CONTINUE", MAXDATASIZE, 0) == -1)
 						send_error();
+					printf("CONTINUE\n");
 				} else	if (verificar_fim(tabuleiro, peca, peca_oponente) == 1){
-					printf("EMPATE\n");
 					if(send(socket_local, "TIE", MAXDATASIZE, 0) == -1)
 						send_error();
+					printf("EMPATE\n");
 					break;
 				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 2){
-					printf("VITORIA\n");
 					if(send(socket_local, "WIN", MAXDATASIZE, 0) == -1)
 						send_error();
+					printf("VITORIA\n");
 					break;
 				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 3){
-					printf("DERROTA\n");
 					if(send(socket_local, "LOSE", MAXDATASIZE, 0) == -1)
 						send_error();
+					printf("DERROTA\n");
 					break;
 				}
 
-				//Vez do socket
+				//Vez do jogador
 				if (my_turn){
 					//Recupero a mensagem
 					if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
 						recv_error();
 					buf[num_bytes] = '\0';
 
+					printf("Mensagem recebida: %s\n", buf);
+
 					int coordenada = atoi(get_value(buf));
 					jogada(coordenada);
 
 					tabuleiro[coordenada-1] = peca;
 
-					if(send(socket_local, "VALID_MOVE", MAXDATASIZE, 0) == -1)
+					if(send(socket_local, generate_message(VALID_MOVE, ""), MAXDATASIZE, 0) == -1)
 						send_error();
 
 					my_turn = 0;
@@ -161,6 +166,7 @@ void main(int argc, char *argv[]){
 
 					if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 						send_error();
+					printf("Mensagem enviada: %s\n", mensagem);
 
 					my_turn = 1;
 				}
