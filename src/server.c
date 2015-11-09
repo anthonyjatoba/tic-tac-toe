@@ -21,7 +21,7 @@ void main(int argc, char *argv[]){
 	int socket_listener, socket_local;
   struct sockaddr_in endereco_local, endereco_remoto;
   int tamanho = sizeof(struct sockaddr_in);
-	char buf[MAXDATASIZE], _buf[MAXDATASIZE], mensagem[MAXDATASIZE];
+	char *buf, *_buf, *mensagem;
 	int num_bytes;
 
 	char tabuleiro[] = "         ";
@@ -30,6 +30,10 @@ void main(int argc, char *argv[]){
 	int my_turn = 0;
 	int end = 0;
 	char nome_jogador[20];
+
+	buf = (char *) calloc (MAXDATASIZE, sizeof(char));
+	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
+	message = (char *) calloc (MAXDATASIZE, sizeof(char));
 
 	system("clear");
 	printf("Servidor iniciado\n");

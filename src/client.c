@@ -20,7 +20,7 @@ void main(int argc, char *argv[]){
   int socket_local;
   struct sockaddr_in endereco_remoto;
   struct hostent * he = gethostbyname("localhost");
-  char buf[MAXDATASIZE], _buf[MAXDATASIZE], message[MAXDATASIZE];
+  char *buf, *_buf, *message;
   int num_bytes;
 
   //Variáveis do jogo
@@ -30,6 +30,10 @@ void main(int argc, char *argv[]){
   int coordenada;
   int my_turn = 0;
   int end = 0;
+
+  buf = (char *) calloc (MAXDATASIZE, sizeof(char));
+	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
+	message = (char *) calloc (MAXDATASIZE, sizeof(char));
 
   system("clear");
 
