@@ -33,7 +33,7 @@ void main(int argc, char *argv[]){
 
 	buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
-	message = (char *) calloc (MAXDATASIZE, sizeof(char));
+	mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
 
 	system("clear");
 	printf("Servidor iniciado\n");
