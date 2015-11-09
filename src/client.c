@@ -25,7 +25,7 @@ void main(int argc, char *argv[]){
 
   //Variáveis do jogo
   char tabuleiro[] = "         ";
-  char nome_jogador[20];
+  char *nome_jogador;
   char peca, peca_oponente;
   int coordenada;
   int my_turn = 0;
@@ -34,6 +34,7 @@ void main(int argc, char *argv[]){
   buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	message = (char *) calloc (MAXDATASIZE, sizeof(char));
+  nome_jogador = (char *) calloc (20, sizeof(char));
 
   system("clear");
 
@@ -47,13 +48,14 @@ void main(int argc, char *argv[]){
   endereco_remoto.sin_family = AF_INET;
   endereco_remoto.sin_port = htons(PORTA);
   endereco_remoto.sin_addr = *((struct in_addr *)he->h_addr);
-  bzero(&(endereco_remoto.sin_zero), 8);
+  memset(endereco_remoto.sin_zero,0,8);
 
   if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
 	  connect_error();
 
-  printf("Digite seu nome: ");
-  scanf(" %[^\n]", nome_jogador);
+  nome_jogador = "a";
+  //printf("Digite seu nome: ");
+  //scanf(" %[^\n]", nome_jogador);
 
   //START
   if(send(socket_local, generate_message(START, nome_jogador), MAXDATASIZE, 0) == -1)
@@ -116,9 +118,8 @@ void main(int argc, char *argv[]){
 
     //Minha vez
     if (my_turn){
-      fflush(stdin);
       do{
-        printf("Digite a coordenada da sua jogada: \n");
+        printf("Digite a coordenada da sua jogada: ");
         scanf("%d", &coordenada);
       } while (!validar_jogada(tabuleiro, coordenada));
 
@@ -140,7 +141,7 @@ void main(int argc, char *argv[]){
       }
 
     } else {
-      printf("Espere o outro jogador\n");
+      printf("Espere o outro jogador");
 
       if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
         recv_error();

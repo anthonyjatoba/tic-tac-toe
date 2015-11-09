@@ -29,11 +29,12 @@ void main(int argc, char *argv[]){
 	char peca_oponente = 'o';
 	int my_turn = 0;
 	int end = 0;
-	char nome_jogador[20];
+	char *nome_jogador;
 
 	buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
+	nome_jogador = (char *) calloc (20, sizeof(char));
 
 	system("clear");
 	printf("Servidor iniciado\n");
@@ -48,7 +49,7 @@ void main(int argc, char *argv[]){
   endereco_local.sin_family = AF_INET;
   endereco_local.sin_port = htons(PORTA);
   endereco_local.sin_addr.s_addr = INADDR_ANY;  //Automático
-  bzero(&(endereco_local.sin_zero),8);
+  memset(endereco_local.sin_zero,0,8);
 
   /* bind */
   if (bind(socket_listener, (struct sockaddr *)&endereco_local, sizeof(struct sockaddr)) == -1)
