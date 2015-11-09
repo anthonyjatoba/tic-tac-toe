@@ -36,6 +36,9 @@ char* generate_message(int message_type, char *value){
     case TIE:
       sprintf(return_message, "TIE");
       break;
+    case CONTINUE:
+        sprintf(return_message, "CONTINUE");
+        break;
 	}
 
   printf("Mensagem gerada: %s\n", return_message);
@@ -63,6 +66,8 @@ enum type get_message_type(char *message){
       return LOSE;
   if(strcmp(tag, "TIE") == 0)
       return TIE;
+  if(strcmp(tag, "CONTINUE") == 0)
+      return CONTINUE;
 	return -1;
 }
 

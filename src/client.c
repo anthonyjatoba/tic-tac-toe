@@ -96,6 +96,22 @@ void main(int argc, char *argv[]){
   do{
     system("clear");
     imprime(tabuleiro);
+
+    if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+      recv_error();
+    buf[num_bytes] = '\0';
+
+    if (get_message_type(buf) == WIN){
+      printf("Você venceu!\n");
+      break;
+    } else if (get_message_type(buf) == LOSE){
+      printf("Você perdeu!\n");
+      break;
+    } else if (get_message_type(buf) == TIE){
+      printf("Deu velha!\n");
+      break;
+    }
+
     //Minha vez
     if (my_turn){
 
@@ -115,22 +131,23 @@ void main(int argc, char *argv[]){
       strcpy(_buf, buf);
 
       if (get_message_type(buf) == VALID_MOVE){
-        printf("Teste\n");
         tabuleiro[coordenada-1] = peca;
+        my_turn = 0;
       }
-      my_turn = 0;
+
     } else {
       printf("Espere o outro jogador\n");
 
       if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
         recv_error();
       buf[num_bytes] = '\0';
+      strcpy(_buf, buf);
 
-      coordenada = atoi(get_value(buf));
-
-      tabuleiro[coordenada-1] = peca_oponente;
-
-      my_turn = 1;
+      if (get_message_type(_buf) == OPPONENT_MOVED){
+        coordenada = atoi(get_value(buf));
+        tabuleiro[coordenada-1] = peca_oponente;
+        my_turn = 1;
+      }
 
     }
   } while(end != 1);

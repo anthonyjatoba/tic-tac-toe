@@ -19,6 +19,7 @@
             WIN: cliente venceu
             LOSE: cloente perdeu
             TIE: empate
+            CONTINUE: o jogo continua
 */
 
   enum type{
@@ -32,9 +33,10 @@
     OPPONENT_MOVED,
     WIN,
     LOSE,
-    TIE
+    TIE,
+    CONTINUE
   };
-  
+
   char* generate_message(int message_type, char *value);
 
   enum type get_message_type(char *value);

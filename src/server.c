@@ -106,6 +106,29 @@ void main(int argc, char *argv[]){
 
 			//Aqui começa a lógica do jogo...
 			do{
+				
+				//Após cada movimento, checar o status
+				if (verificar_fim(tabuleiro, peca, peca_oponente) == 0){
+					printf("CONTINUE\n");
+					if(send(socket_local, "CONTINUE", MAXDATASIZE, 0) == -1)
+						send_error();
+				} else	if (verificar_fim(tabuleiro, peca, peca_oponente) == 1){
+					printf("EMPATE\n");
+					if(send(socket_local, "TIE", MAXDATASIZE, 0) == -1)
+						send_error();
+					break;
+				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 2){
+					printf("VITORIA\n");
+					if(send(socket_local, "WIN", MAXDATASIZE, 0) == -1)
+						send_error();
+					break;
+				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 3){
+					printf("DERROTA\n");
+					if(send(socket_local, "LOSE", MAXDATASIZE, 0) == -1)
+						send_error();
+					break;
+				}
+
 				//Vez do socket
 				if (my_turn){
 					//Recupero a mensagem
@@ -132,7 +155,7 @@ void main(int argc, char *argv[]){
 						sleep(1);
 					} while (posicao_anterior == posicao_atual);
 
-					tabuleiro[posicao_atual] = peca_oponente;
+					tabuleiro[posicao_atual-1] = peca_oponente;
 
 					sprintf(mensagem, "OPPONENT_MOVED %d", posicao_atual);
 
