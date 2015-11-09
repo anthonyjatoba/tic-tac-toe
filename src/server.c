@@ -106,7 +106,7 @@ void main(int argc, char *argv[]){
 
 			//Aqui começa a lógica do jogo...
 			do{
-				
+
 				//Após cada movimento, checar o status
 				if (verificar_fim(tabuleiro, peca, peca_oponente) == 0){
 					printf("CONTINUE\n");
