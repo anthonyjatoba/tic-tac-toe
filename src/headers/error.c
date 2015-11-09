@@ -33,5 +33,5 @@
 
 	void gethostbyname_error() {
 		herror("gethostbyname");
-        	exit(1);
+    exit(1);
 	}

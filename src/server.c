@@ -19,12 +19,10 @@
 
 void main(int argc, char *argv[]){
 	int socket_listener, socket_local;
-  //sockaddr_in referente ao servidor
   struct sockaddr_in endereco_local, endereco_remoto;
-  //guarda o tamanho para o accept
   int tamanho = sizeof(struct sockaddr_in);
-  int num_bytes;
 	char buf[MAXDATASIZE], _buf[MAXDATASIZE], mensagem[MAXDATASIZE];
+	int num_bytes;
 
 	char tabuleiro[] = "         ";
 	char peca = 'x';
@@ -90,6 +88,8 @@ void main(int argc, char *argv[]){
 			} else {
 				strcpy(mensagem, "FULL_ROOM");
 			}
+
+			printf("%s entrou\n", nome_jogador);
 
 			if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 				send_error();
