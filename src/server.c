@@ -161,7 +161,7 @@ void main(int argc, char *argv[]){
 					do{
 						posicao_atual = get_posicao();
 						usleep(1000);
-					} while (posicao_anterior == posicao_atual);
+					} while (posicao_anterior == posicao_atual || posicao_atual == -1);
 
 					tabuleiro[posicao_atual-1] = peca_oponente;
 

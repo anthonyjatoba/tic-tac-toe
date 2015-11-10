@@ -149,4 +149,5 @@ void main(int argc, char *argv[]) {
       print_ajuda();
     }
   } while (opc != 3);
+  close(socket_local);
 }
