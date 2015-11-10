@@ -53,7 +53,6 @@ void main(int argc, char *argv[]){
   if (connect(socket_local, (struct sockaddr *)&endereco_remoto, sizeof(struct sockaddr)) == -1)
 	  connect_error();
 
-
   do{
       print_menu();
       scanf("%d", &opc);
@@ -86,11 +85,9 @@ void main(int argc, char *argv[]){
           }
 
           //Aguarda o jogo estar pronto (2 jogadores)
-          do{
-            if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
+          if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
               recv_error();
             buf[num_bytes] = '\0';
-          } while(strcmp(buf, "READY") != 0);
 
           //X começa
           if (peca == 'x')

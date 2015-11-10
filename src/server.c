@@ -104,8 +104,7 @@ void main(int argc, char *argv[]){
 			//Aqui ele avisa aos clientes que está pronto para o jogo
 			//Tá consumindo bastante cpu...
 			do{
-				if(send(socket_local, "WAIT", MAXDATASIZE, 0) == -1)
-					send_error();
+				sleep(0.1);
 			} while(get_num_jogadores() != 2);
 
 			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
