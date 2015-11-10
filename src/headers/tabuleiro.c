@@ -30,18 +30,6 @@ int get_posicao() {
   return posic;
 }
 
-void imprime(char tabuleiro[10]){
-  printf("    |    |   \n");
-  printf("  %c | %c  | %c\n", tabuleiro[0], tabuleiro[1], tabuleiro[2]);
-  printf("____|____|____\n");
-  printf("    |    |   \n");
-  printf("  %c | %c  | %c\n", tabuleiro[3], tabuleiro[4], tabuleiro[5]);
-  printf("____|____|____\n");
-  printf("    |    |   \n");
-  printf("  %c | %c  | %c\n", tabuleiro[6], tabuleiro[7], tabuleiro[8]);
-  printf("    |    |   \n");
-}
-
 int validar_jogada(char tabuleiro[10], int posicao) {
   if (posicao >= 1 && posicao <= 9)
     if (tabuleiro[posicao-1] == ' ')
