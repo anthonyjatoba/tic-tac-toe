@@ -4,30 +4,30 @@
 
 #include "tabuleiro.h"
 
-//caminho no qual o arquivo será salvo
-#define PATH "tabuleiro.record"
-#define NAO_ACABOU 0
-#define EMPATE 1
-#define VITORIA 2
-#define DERROTA 3
+#define DIRETORIO "tabuleiro.record"
+
+#define NAO_ACABOU  0
+#define EMPATE      1
+#define VITORIA     2
+#define DERROTA     3
 
 void iniciar_tabuleiro() {
-  FILE *fp = fopen(PATH, "w");
+  FILE *fp = fopen(DIRETORIO, "w");
   fclose(fp);
 }
 
 void jogada(int posicao) {
-  FILE *fp = fopen(PATH, "w");
+  FILE *fp = fopen(DIRETORIO, "w");
   fprintf(fp, "%d\n", posicao);
   fclose(fp);
 }
 
 int get_posicao() {
-  int posic = -1;
-  FILE *fp = fopen(PATH, "r");
-  fscanf(fp, "%d", &posic);
+  int posicao = -1;
+  FILE *fp = fopen(DIRETORIO, "r");
+  fscanf(fp, "%d", &posicao);
   fclose(fp);
-  return posic;
+  return posicao;
 }
 
 int validar_jogada(char tabuleiro[10], int posicao) {

@@ -1,5 +1,5 @@
-#ifndef GUI_H
-#define GUI_H
+#ifndef UI_H
+#define UI_H
 
 void print_header(char *title);
 

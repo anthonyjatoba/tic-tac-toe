@@ -1,5 +1,5 @@
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef MENSAGEM_H
+#define MENSAGEM_H
 
 /*
   Criei um protocolo textual com as seguintes mensagens:
@@ -22,7 +22,7 @@
             CONTINUE: o jogo continua
 */
 
-  enum type{
+  enum tipo{
     START,
     WELCOME,
     FULL_ROOM,
@@ -37,12 +37,10 @@
     CONTINUE
   };
 
-  char* generate_message(int message_type, char *value);
+  char* gerar_mensagem(int tipo_mensagem, char *valor, int print_log);
 
-  enum type get_message_type(char *value);
+  enum tipo get_tipo_mensagem(char *mensagem);
 
-  char* get_value(char* message);
-
-  void log_message(char *message);
+  char* get_valor(char *mensagem);
 
 #endif

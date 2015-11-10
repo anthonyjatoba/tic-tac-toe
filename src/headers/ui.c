@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "gui.h"
+#include "ui.h"
 
 void print_title(char *title) {
   int i;

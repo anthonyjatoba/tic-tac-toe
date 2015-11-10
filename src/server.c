@@ -10,7 +10,7 @@
 
 #include "headers/error.h"
 #include "headers/jogador.h"
-#include "headers/message.h"
+#include "headers/mensagem.h"
 #include "headers/tabuleiro.h"
 
 #define PORTA   12345
@@ -81,16 +81,16 @@ void main(int argc, char *argv[]){
 
 			strcpy(_buf, buf);
 
-			strcpy(nome_jogador, get_value(_buf));
+			strcpy(nome_jogador, get_valor(_buf));
 
 			if (inserir_jogador(nome_jogador) == 0){
 				if (get_num_jogadores() == 1){
 					my_turn = 1;
-					strcpy(mensagem, generate_message(WELCOME, "x"));
+					strcpy(mensagem, gerar_mensagem(WELCOME, "x", 1));
 				} else if (get_num_jogadores() == 2){
 					peca = 'o';
 					peca_oponente = 'x';
-					strcpy(mensagem, generate_message(WELCOME, "o"));
+					strcpy(mensagem, gerar_mensagem(WELCOME, "o", 1));
 				}
 			} else {
 				strcpy(mensagem, "FULL_ROOM");
@@ -104,7 +104,7 @@ void main(int argc, char *argv[]){
 			//Aqui ele avisa aos clientes que está pronto para o jogo
 			//Tá consumindo bastante cpu...
 			do{
-				sleep(0.1);
+				usleep(100);
 			} while(get_num_jogadores() != 2);
 
 			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
@@ -144,12 +144,12 @@ void main(int argc, char *argv[]){
 
 					printf("Mensagem recebida: %s\n", buf);
 
-					int coordenada = atoi(get_value(buf));
+					int coordenada = atoi(get_valor(buf));
 					jogada(coordenada);
 
 					tabuleiro[coordenada-1] = peca;
 
-					if(send(socket_local, generate_message(VALID_MOVE, ""), MAXDATASIZE, 0) == -1)
+					if(send(socket_local, gerar_mensagem(VALID_MOVE, "", 1), MAXDATASIZE, 0) == -1)
 						send_error();
 
 					my_turn = 0;
@@ -160,7 +160,7 @@ void main(int argc, char *argv[]){
 
 					do{
 						posicao_atual = get_posicao();
-						sleep(1);
+						usleep(1000);
 					} while (posicao_anterior == posicao_atual);
 
 					tabuleiro[posicao_atual-1] = peca_oponente;
@@ -173,10 +173,7 @@ void main(int argc, char *argv[]){
 
 					my_turn = 1;
 				}
-			}while(1);
-
+			} while(1);
 		}
-
 	}
-
 }
