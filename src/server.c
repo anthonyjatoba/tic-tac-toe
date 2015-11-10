@@ -100,7 +100,6 @@ void main(int argc, char *argv[]){
 
 			if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
 				send_error();
-			printf("Mensagem enviada: %s\n", mensagem);
 
 			//Aqui ele avisa aos clientes que está pronto para o jogo
 			//Tá consumindo bastante cpu...

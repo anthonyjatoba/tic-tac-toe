@@ -139,7 +139,7 @@ void main(int argc, char *argv[]){
               }
 
             } else {
-              printf(" Espere o outro jogador");
+              printf(" Espere o outro jogador\n");
 
               if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
                 recv_error();
