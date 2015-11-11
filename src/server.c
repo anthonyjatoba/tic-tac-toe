@@ -119,17 +119,17 @@ void main(int argc, char *argv[]){
 						send_error();
 					printf("CONTINUE\n");
 				} else	if (verificar_fim(tabuleiro, peca, peca_oponente) == 1){
-					if(send(socket_local, "TIE", MAXDATASIZE, 0) == -1)
+					if(send(socket_local, gerar_mensagem(GAME_OVER, "TIE", 1), MAXDATASIZE, 0) == -1)
 						send_error();
 					printf("EMPATE\n");
 					break;
 				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 2){
-					if(send(socket_local, "WIN", MAXDATASIZE, 0) == -1)
+					if(send(socket_local, gerar_mensagem(GAME_OVER, "WIN", 1), MAXDATASIZE, 0) == -1)
 						send_error();
 					printf("VITORIA\n");
 					break;
 				} else if (verificar_fim(tabuleiro, peca, peca_oponente) == 3){
-					if(send(socket_local, "LOSE", MAXDATASIZE, 0) == -1)
+					if(send(socket_local, gerar_mensagem(GAME_OVER, "LOSE", 1), MAXDATASIZE, 0) == -1)
 						send_error();
 					printf("DERROTA\n");
 					break;

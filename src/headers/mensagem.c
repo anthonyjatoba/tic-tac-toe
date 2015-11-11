@@ -27,14 +27,8 @@ char* gerar_mensagem(int tipo_mensagem, char *valor, int print_log){
     case OPPONENT_MOVED:
       sprintf(mensagem, "OPPONENT_MOVED %s", valor);
       break;
-    case WIN:
-      sprintf(mensagem, "WIN");
-      break;
-    case LOSE:
-      sprintf(mensagem, "LOSE");
-      break;
-    case TIE:
-      sprintf(mensagem, "TIE");
+    case GAME_OVER:
+      sprintf(mensagem, "GAME_OVER %s", valor);
       break;
     case CONTINUE:
         sprintf(mensagem, "CONTINUE");
@@ -63,12 +57,8 @@ enum tipo get_tipo_mensagem(char *mensagem){
   		return VALID_MOVE;
   if(strcmp(tag, "OPPONENT_MOVED") == 0)
   		return OPPONENT_MOVED;
-  if(strcmp(tag, "WIN") == 0)
-  		return WIN;
-  if(strcmp(tag, "LOSE") == 0)
-      return LOSE;
-  if(strcmp(tag, "TIE") == 0)
-      return TIE;
+  if(strcmp(tag, "GAME_OVER") == 0)
+  		return GAME_OVER;
   if(strcmp(tag, "CONTINUE") == 0)
       return CONTINUE;
 	return -1;

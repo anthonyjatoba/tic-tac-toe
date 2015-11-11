@@ -31,9 +31,7 @@
     MOVE,
     VALID_MOVE,
     OPPONENT_MOVED,
-    WIN,
-    LOSE,
-    TIE,
+    GAME_OVER,
     CONTINUE
   };
 

@@ -97,15 +97,17 @@ void main(int argc, char *argv[]) {
           recv_error();
         buf[num_bytes] = '\0';
 
-        if (get_tipo_mensagem(buf) == WIN) {
-          printf("Você venceu!\n");
-          break;
-        } else if (get_tipo_mensagem(buf) == LOSE) {
-          printf("Você perdeu!\n");
-          break;
-        } else if (get_tipo_mensagem(buf) == TIE) {
-          printf("Deu velha!\n");
-          break;
+        if (get_tipo_mensagem(buf) == GAME_OVER){
+          if (strcmp(get_valor(buf), "WIN") == 0) {
+            printf("Você venceu!\n");
+            break;
+          } else if (strcmp(get_valor(buf), "LOSE") == 0) {
+            printf("Você perdeu!\n");
+            break;
+          } else if (strcmp(get_valor(buf), "TIE") == 0) {
+            printf("Deu velha!\n");
+            break;
+          }
         }
 
         //Minha vez
@@ -148,6 +150,7 @@ void main(int argc, char *argv[]) {
         }
       } while(fim != 1);
       sleep(5);
+      opc = '3';
     } else if (opc == '2') {
       print_ajuda();
     } else if (opc != '3') {
