@@ -4,7 +4,7 @@
 
 #include "jogador.h"
 
-//caminho no qual o arquivo será salvo
+//Caminho no qual o arquivo será salvo
 #define DIRETORIO "jogadores.record"
 
 void iniciar_jogadores() {
@@ -38,6 +38,7 @@ int inserir_jogador(char* nome) {
   return 1;
 }
 
+//Busca o nome do oponente no arquivo
 void get_nome_oponente(char *nome_jogador, char*nome_oponente){
   char *nome;
   nome = (char *) calloc (20, sizeof(char));

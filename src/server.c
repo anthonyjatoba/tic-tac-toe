@@ -34,8 +34,8 @@ void main(int argc, char *argv[]){
 	buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
-	nome_jogador = (char *) calloc (20, sizeof(char));
-	nome_oponente = (char *) calloc (20, sizeof(char));
+	nome_jogador = (char *) calloc (40, sizeof(char));
+	nome_oponente = (char *) calloc (40, sizeof(char));
 
 	system("clear");
 	printf("Servidor iniciado\n");

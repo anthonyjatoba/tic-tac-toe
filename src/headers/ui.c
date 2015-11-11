@@ -38,19 +38,19 @@ void print_ajuda() {
   printf(" Após se conectar, escolha um nome e aguarde outro jogador logar.\n\n");
   printf(" Para fazer sua jogada, basta digitar a coordenada desejada, como no tabuleiro: \n\n");
   print_tabuleiro("123456789");
-  printf("\n Digite algo e aperte enter para voltar.");
+  printf("\n Digite algo e aperte enter para voltar > ");
   scanf("%d", &a);
 }
 
 void print_setup(){
   system("clear");
   print_title("Novo jogo");
-  printf(" Digite seu nome: ");
+  printf(" Digite seu nome > ");
 }
 
 void print_tela_jogo(char tabuleiro[10], char *nome, char peca, char *oponente, char peca_oponente){
   system("clear");
-  print_title("Jogo");
+  print_title("Jogo da velha");
   printf(" %s está jogando com %c\n %s está jogando com %c\n", nome, peca, oponente, peca_oponente);
   print_tabuleiro(tabuleiro);
   printf("\n");

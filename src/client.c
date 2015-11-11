@@ -33,8 +33,8 @@ void main(int argc, char *argv[]) {
   buf = (char *) calloc (MAXDATASIZE, sizeof(char));
   _buf = (char *) calloc (MAXDATASIZE, sizeof(char));
   mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
-  nome_jogador = (char *) calloc (20, sizeof(char));
-  nome_oponente = (char *) calloc (20, sizeof(char));
+  nome_jogador = (char *) calloc (40, sizeof(char));
+  nome_oponente = (char *) calloc (40, sizeof(char));
 
   if (argc == 2)
     if ((he=gethostbyname(argv[1])) == NULL)
@@ -140,7 +140,7 @@ void main(int argc, char *argv[]) {
           }
 
         } else {
-          printf(" Espere o outro jogador\n");
+          printf(" Aguarde o outro jogador fazer sua jogada.\n");
 
           if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
             recv_error();
@@ -158,8 +158,6 @@ void main(int argc, char *argv[]) {
       opc = '3';
     } else if (opc == '2') {
       print_ajuda();
-    } else if (opc != '3') {
-      opc = 0;
     }
   } while (opc != '3');
   close(socket_local);
