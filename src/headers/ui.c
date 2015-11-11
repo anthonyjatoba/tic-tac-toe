@@ -51,7 +51,7 @@ void print_setup(){
 void print_tela_jogo(char tabuleiro[10], char *nome, char peca, char *oponente, char peca_oponente){
   system("clear");
   print_title("Jogo");
-  printf(" Jogador: %s\tPeça: %c\t\t\t Oponente: %s\tPeça: %c\n\n", nome, peca, oponente, peca_oponente);
+  printf(" %s está jogando com %c\n %s está jogando com %c\n", nome, peca, oponente, peca_oponente);
   print_tabuleiro(tabuleiro);
   printf("\n");
 }

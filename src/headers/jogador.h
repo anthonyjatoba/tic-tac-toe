@@ -14,4 +14,6 @@
   //Salva um jogador no arquivo
   void inserir_jogador(char nome);
 
+  char* get_nome_oponente(char *nome_jogador);
+
 #endif

@@ -29,12 +29,13 @@ void main(int argc, char *argv[]){
 	char peca_oponente = 'o';
 	int my_turn = 0;
 	int end = 0;
-	char *nome_jogador;
+	char *nome_jogador, *nome_oponente;
 
 	buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	_buf = (char *) calloc (MAXDATASIZE, sizeof(char));
 	mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
 	nome_jogador = (char *) calloc (20, sizeof(char));
+	nome_oponente = (char *) calloc (20, sizeof(char));
 
 	system("clear");
 	printf("Servidor iniciado\n");
@@ -107,7 +108,10 @@ void main(int argc, char *argv[]){
 				usleep(100);
 			} while(get_num_jogadores() != 2);
 
-			if(send(socket_local, "READY", MAXDATASIZE, 0) == -1)
+			get_nome_oponente(nome_jogador, nome_oponente);
+			printf("Oponente do %s é o %s\n", nome_jogador, nome_oponente);
+
+			if(send(socket_local, gerar_mensagem(READY, nome_oponente, 1), MAXDATASIZE, 0) == -1)
 					send_error();
 			printf("Mandei a mensagem de READY para %s\n", nome_jogador);
 

@@ -25,7 +25,7 @@ void main(int argc, char *argv[]) {
 
   //Variáveis do jogo
   char tabuleiro[] = "         ";
-  char *nome_jogador;
+  char *nome_jogador, *nome_oponente;
   char peca = 'x', peca_oponente = 'o';
   int coordenada, minha_vez = 0, fim = 0;
   char opc = ' ';
@@ -34,6 +34,7 @@ void main(int argc, char *argv[]) {
   _buf = (char *) calloc (MAXDATASIZE, sizeof(char));
   mensagem = (char *) calloc (MAXDATASIZE, sizeof(char));
   nome_jogador = (char *) calloc (20, sizeof(char));
+  nome_oponente = (char *) calloc (20, sizeof(char));
 
   if (argc == 2)
     if ((he=gethostbyname(argv[1])) == NULL)
@@ -86,12 +87,16 @@ void main(int argc, char *argv[]) {
           recv_error();
         buf[num_bytes] = '\0';
 
+      printf("Mensagem >> %s\n", buf);
+      printf("Valor >> %s\n", get_valor(buf));
+      strcpy(nome_oponente, get_valor(buf));
+
       //X começa
       if (peca == 'x')
         minha_vez = 1;
 
       do {
-        print_tela_jogo(tabuleiro, nome_jogador, peca, "provisório", peca_oponente);
+        print_tela_jogo(tabuleiro, nome_jogador, peca, nome_oponente, peca_oponente);
 
         if ((num_bytes = recv(socket_local, buf, MAXDATASIZE, 0)) == -1)
           recv_error();

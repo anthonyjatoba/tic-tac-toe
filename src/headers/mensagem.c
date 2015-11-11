@@ -18,6 +18,9 @@ char* gerar_mensagem(int tipo_mensagem, char *valor, int print_log){
     case FULL_ROOM:
       sprintf(mensagem, "FULL_ROOM");
       break;
+    case READY:
+        sprintf(mensagem, "READY %s", valor);
+  			break;
     case MOVE:
       sprintf(mensagem, "MOVE %s", valor);
       break;

@@ -37,3 +37,17 @@ int inserir_jogador(char* nome) {
   }
   return 1;
 }
+
+void get_nome_oponente(char *nome_jogador, char*nome_oponente){
+  char *nome;
+  nome = (char *) calloc (20, sizeof(char));
+
+  FILE *fp = fopen(DIRETORIO, "r");
+  fscanf(fp, "%s\n",  nome);
+  if (strcmp(nome, nome_jogador) == 0)
+    fscanf(fp, "%s\n", nome);
+
+  strcpy(nome_oponente, nome);
+
+  fclose(fp);
+}
