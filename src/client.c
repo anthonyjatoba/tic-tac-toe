@@ -27,7 +27,8 @@ void main(int argc, char *argv[]) {
   char tabuleiro[] = "         ";
   char *nome_jogador;
   char peca = 'x', peca_oponente = 'o';
-  int coordenada, minha_vez = 0, fim = 0, opc;
+  int coordenada, minha_vez = 0, fim = 0;
+  char opc = ' ';
 
   buf = (char *) calloc (MAXDATASIZE, sizeof(char));
   _buf = (char *) calloc (MAXDATASIZE, sizeof(char));
@@ -51,8 +52,10 @@ void main(int argc, char *argv[]) {
 
   do {
     print_menu();
-    scanf("%d", &opc);
-    if (opc == 1) {
+    fflush(stdin);
+    scanf("%c", &opc);
+    printf("\n");
+    if (opc == '1') {
 
       print_setup();
       scanf(" %[^\n]", nome_jogador);
@@ -145,9 +148,11 @@ void main(int argc, char *argv[]) {
         }
       } while(fim != 1);
       sleep(5);
-    } else if (opc == 2) {
+    } else if (opc == '2') {
       print_ajuda();
+    } else if (opc != '3') {
+      opc = 0;
     }
-  } while (opc != 3);
+  } while (opc != '3');
   close(socket_local);
 }
