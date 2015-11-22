@@ -30,9 +30,9 @@ int get_posicao() {
   return posicao;
 }
 
-int validar_jogada(char tabuleiro[10], int posicao) {
-  if (posicao >= 1 && posicao <= 9)
-    if (tabuleiro[posicao-1] == ' ')
+int validar_jogada(char tabuleiro[10], char posicao) {
+  if (posicao >= '1' && posicao <= '9')
+    if (tabuleiro[(posicao-48)-1] == ' ')
       return 1;
   return 0;
 }

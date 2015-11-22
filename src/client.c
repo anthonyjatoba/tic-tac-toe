@@ -27,7 +27,8 @@ void main(int argc, char *argv[]) {
   char tabuleiro[] = "         ";
   char *nome_jogador, *nome_oponente;
   char peca = 'x', peca_oponente = 'o';
-  int coordenada, minha_vez = 0, fim = 0;
+  int minha_vez = 0, fim = 0;
+  char coordenada;
   char opc = ' ';
 
   buf = (char *) calloc (MAXDATASIZE, sizeof(char));
@@ -119,10 +120,11 @@ void main(int argc, char *argv[]) {
         if (minha_vez) {
           do{
             printf(" Digite a coordenada da sua jogada: ");
-            scanf("%d", &coordenada);
+            scanf(" %[^\n]", &coordenada);
+            fflush(stdin);
           } while (!validar_jogada(tabuleiro, coordenada));
 
-          sprintf(mensagem, "MOVE %d", coordenada);
+          sprintf(mensagem, "MOVE %c", coordenada);
 
           if(send(socket_local, mensagem, MAXDATASIZE, 0) == -1)
             send_error();
@@ -135,7 +137,7 @@ void main(int argc, char *argv[]) {
           strcpy(_buf, buf);
 
           if (get_tipo_mensagem(buf) == VALID_MOVE) {
-            tabuleiro[coordenada-1] = peca;
+            tabuleiro[(coordenada-48)-1] = peca;
             minha_vez = 0;
           }
 
