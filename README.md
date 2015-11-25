@@ -19,4 +19,4 @@ $ ./cliente
 
 Vídeo demonstrativo
 
-[![Jogo da Velha Online](cover.jpg)](https://youtu.be/QnYHAkBYZEo)
+[![Jogo da Velha Online](cover.png)](https://youtu.be/QnYHAkBYZEo)
